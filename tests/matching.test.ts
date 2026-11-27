@@ -90,6 +90,23 @@ describe("scoreOpportunity", () => {
       ),
     ).toBeGreaterThan(0);
   });
+
+  it("sorts offset-bearing timestamps by exact instant, not timestamp text", () => {
+    const later = {
+      ...FIXTURE_OPPORTUNITIES[0],
+      deadlineAt: "2027-01-10T16:00:00.000Z",
+    };
+    const earlier = {
+      ...FIXTURE_OPPORTUNITIES[1],
+      deadlineAt: "2027-01-10T23:59:00+09:00",
+    };
+    expect(
+      compareByMatch(
+        { opportunity: later, score: 50 },
+        { opportunity: earlier, score: 50 },
+      ),
+    ).toBeGreaterThan(0);
+  });
 });
 
 describe("isOpportunityVisible", () => {
@@ -113,7 +130,7 @@ describe("isOpportunityVisible", () => {
     expect(isOpportunityVisible(expired, now)).toBe(false);
   });
 
-  it("shows a same-day deadline before its exact WIB cutoff", () => {
+  it("shows a same-day deadline immediately before its exact WIB cutoff", () => {
     const listing = {
       ...FIXTURE_OPPORTUNITIES[0],
       verifiedAt: "2027-01-10",
@@ -123,12 +140,24 @@ describe("isOpportunityVisible", () => {
     ).toBe(true);
   });
 
-  it("hides a same-day deadline after its exact WIB cutoff", () => {
+  it("hides a same-day deadline at its exact WIB cutoff", () => {
     const listing = {
       ...FIXTURE_OPPORTUNITIES[0],
       verifiedAt: "2027-01-10",
     };
-    expect(isOpportunityVisible(listing, new Date("2027-01-10T17:00:00.000Z"))).toBe(false);
+    expect(
+      isOpportunityVisible(listing, new Date("2027-01-10T16:59:00.000Z")),
+    ).toBe(false);
+  });
+
+  it("hides the deadline after cutoff while it is still the same WIB date", () => {
+    const listing = {
+      ...FIXTURE_OPPORTUNITIES[0],
+      verifiedAt: "2027-01-10",
+    };
+    expect(
+      isOpportunityVisible(listing, new Date("2027-01-10T16:59:00.001Z")),
+    ).toBe(false);
   });
 
   it("hides a deadline that has already passed", () => {

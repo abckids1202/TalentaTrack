@@ -10,10 +10,11 @@ This is a local prototype, not a production service. Its three opportunity recor
 
 - Onboarding and profile editing for grade, interests, province/city, individual/team preference, and reminder timezone.
 - An opportunity feed with search, category/interest filters, match scoring, and deadline sorting.
+- Feed visibility compares exact deadline instants and hides fixed-deadline listings at cutoff; WIB-only source deadlines default to Asia/Jakarta.
 - Detail pages with eligibility, cost, location, exact deadline timezone, and organizer-source links.
 - Save/unsave and a saved-opportunity list.
 - A local reminder schedule preview for fixed deadlines.
-- A browser-local admin flow to draft, edit, publish, and archive fixture listings.
+- A browser-local admin flow to draft, edit, publish, and archive fixture listings; expired fixed deadlines are rejected.
 
 Profile, saved-list, reminder-toggle, and listing edits are stored in this browser's `localStorage`. They do not sync across devices or users.
 
@@ -68,6 +69,8 @@ npm run typecheck
 npm test
 npm run build
 ```
+
+Deadline tests cover before/at/after the same-day WIB cutoff, past deadlines, WIB/WITA/WIT conversions and labels, and offset-aware ordering.
 
 See [Project status](docs/PROJECT_STATUS.md), [Architecture](docs/ARCHITECTURE.md), [Security and data](docs/SECURITY_AND_DATA.md), and the [Phase 0 specification](docs/phase-0-spec.md) for verified implementation details and next steps.
 

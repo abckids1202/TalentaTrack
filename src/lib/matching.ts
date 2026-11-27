@@ -1,5 +1,5 @@
 import type { Opportunity, StudentProfile } from "./types";
-import { isDeadlineFuture } from "./deadlines";
+import { compareDeadlineInstants, isDeadlineFuture } from "./deadlines";
 
 export interface MatchResult {
   score: number;
@@ -107,10 +107,11 @@ export function compareByMatch(
 ) {
   const scoreDiff = right.score - left.score;
   if (scoreDiff) return scoreDiff;
-  const leftDate = left.opportunity.deadlineAt ?? "9999-12-31T23:59:59.999Z";
-  const rightDate = right.opportunity.deadlineAt ?? "9999-12-31T23:59:59.999Z";
   return (
-    leftDate.localeCompare(rightDate) ||
+    compareDeadlineInstants(
+      left.opportunity.deadlineAt,
+      right.opportunity.deadlineAt,
+    ) ||
     left.opportunity.title.localeCompare(right.opportunity.title, "id")
   );
 }

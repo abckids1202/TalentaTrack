@@ -8,11 +8,11 @@
 - Next.js App Router shell, responsive-oriented editorial interface, and Indonesian-language routes.
 - Student onboarding and profile editing for grade, interest tags, province/city, participation preference, and timezone.
 - Three bundled opportunity fixtures (two marked published, one draft) with source URLs, eligibility, participation, cost, location, verification metadata, and exact deadline instant/timezone.
-- Feed visibility gates for publication status, verification age, grade eligibility, and exact fixed-deadline cutoff.
+- Feed visibility gates for publication status, verification age, grade eligibility, and the exact fixed-deadline instant, including its timezone offset. Listings hide at cutoff; WIB-only sources default to Asia/Jakarta.
 - Deterministic match scoring, search/filter controls, and sorting.
 - Opportunity detail/source link, local save/unsave, saved-list view, and browser-local reminder preference.
 - Admin draft/edit/publish/archive flow stored in browser `localStorage`; publishing checks required fields and rejects expired fixed deadlines.
-- Unit tests for matching, visibility, deadline conversion/cutoffs, and reminder-preview calculations.
+- Unit tests cover matching, before/at/after a same-day WIB cutoff, past deadlines, WIB/WITA/WIT conversion and labels, offset-aware timestamp ordering, and reminder-preview calculations.
 
 “Implemented” here means present in the local application and supported by the inspected code/tests. It does not mean production operations or organizer data are independently verified.
 

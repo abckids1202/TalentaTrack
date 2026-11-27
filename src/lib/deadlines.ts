@@ -129,3 +129,14 @@ export function isDeadlineFuture(deadlineAt: string | null | undefined, now = ne
   const instant = parseExactInstant(deadlineAt);
   return Boolean(instant && instant.getTime() > now.getTime());
 }
+
+export function compareDeadlineInstants(
+  leftDeadlineAt: string | null | undefined,
+  rightDeadlineAt: string | null | undefined,
+) {
+  const leftInstant = parseExactInstant(leftDeadlineAt)?.getTime();
+  const rightInstant = parseExactInstant(rightDeadlineAt)?.getTime();
+  if (leftInstant === undefined) return rightInstant === undefined ? 0 : 1;
+  if (rightInstant === undefined) return -1;
+  return leftInstant - rightInstant;
+}

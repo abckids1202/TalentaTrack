@@ -12,6 +12,7 @@ import {
   isOpportunityVisible,
   scoreOpportunity,
 } from "@/lib/matching";
+import { compareDeadlineInstants } from "@/lib/deadlines";
 import type { Category, InterestTag } from "@/lib/types";
 
 const categoryOptions: Array<{ value: Category | "all"; label: string }> = [
@@ -62,11 +63,13 @@ export default function OpportunitiesPage() {
       .filter(({ match }) => match.eligible)
       .map(({ opportunity, match }) => ({ opportunity, score: match.score }));
     if (sort === "match") return records.sort(compareByMatch);
-    return records.sort((left, right) => {
-      const leftDate = left.opportunity.deadlineAt ?? "9999-12-31T23:59:59.999Z";
-      const rightDate = right.opportunity.deadlineAt ?? "9999-12-31T23:59:59.999Z";
-      return leftDate.localeCompare(rightDate) || compareByMatch(left, right);
-    });
+    return records.sort(
+      (left, right) =>
+        compareDeadlineInstants(
+          left.opportunity.deadlineAt,
+          right.opportunity.deadlineAt,
+        ) || compareByMatch(left, right),
+    );
   }, [opportunities, profile, category, interest, search, sort]);
 
   if (!hydrated || !profile) return <div className="loading-screen" />;
